@@ -2,8 +2,13 @@ require 'rubygems'
 require 'yaml'
 require 'haml'
 require 'sinatra'
+require 'date'
 
-FlickRawOptions = YAML.load_file('flickraw.yaml')
+FlickRawOptions = if File.exists?('flickraw.yaml')
+  YAML.load_file('flickraw.yaml')
+else
+  { 'api_key' => ENV['api_key'] }
+end
 
 require 'flickraw'
 
@@ -19,14 +24,16 @@ class FlickrSearch
       matching_photos[0]
     end
   end
-  
+
   def current_photo_description
-    flickr.photos.getInfo(:photo_id => current_photo['id']).description
+    info = flickr.photos.getInfo(:photo_id => current_photo['id'])
+    taken = DateTime.parse(info.dates['taken'])
+    return "#{info.description} taken: #{taken.strftime('%d %b %Y')}"
   end
   
   def other_thumbnails
     matching_photos.to_a.reverse.collect do |photo|
-      [photo.title, FlickRaw.url_t(photo), "/show/#{photo['id']}"]
+      [photo.title, FlickRaw.url_t(photo), "/photo/#{photo['id']}"]
     end
   end
   
@@ -55,5 +62,20 @@ get '/' do
   @photo_link = FlickRaw.url_photopage(@photo)
 
   @other_thumbnails = search.other_thumbnails
+  haml :index
+end
+
+get '/photo/:photo_id' do
+  search = FlickrSearch.new(params[:photo_id])
+
+  @photo = search.current_photo
+  etag(@photo['id'])
+
+  @description = search.current_photo_description
+  @photo_url = FlickRaw.url(@photo)
+  @photo_link = FlickRaw.url_photopage(@photo)
+  
+  @other_thumbnails = search.other_thumbnails
+  
   haml :index
 end
