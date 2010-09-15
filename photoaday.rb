@@ -70,10 +70,6 @@ protected
       :extra_info => 'date_taken,path_alias,url_sq,url_t,url_s,url_m,url_o'
     }
   end
-  
-  def format_date_taken(taken)
-    return 
-  end
 end
 
 get '/' do
