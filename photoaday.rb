@@ -28,7 +28,7 @@ class FlickrSearch
   def current_photo_description
     info = flickr.photos.getInfo(:photo_id => current_photo['id'])
     taken = DateTime.parse(info.dates['taken'])
-    return "#{info.description} taken: #{taken.strftime('%d %b %Y')}"
+    return "#{info.description} \ntaken: #{taken.strftime('%d %b %Y')}"
   end
   
   def other_thumbnails
