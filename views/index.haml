@@ -1,7 +1,8 @@
-%h1 one photo every day
-
 %a{ :href => @photo_link, :title => @photo.title }
   %img{ :class => 'main', :src => @photo_url, :alt => @photo.title }
+
+%p{ :class => 'phototitle' }
+  = @photo.title
 
 %h2= "taken on #{@date_taken}"
 

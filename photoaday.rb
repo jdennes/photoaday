@@ -46,8 +46,8 @@ class FlickrSearch
   end
 
   def current_photo_date_taken
-    dt = DateTime.parse(flickr.photos.getInfo(:photo_id => current_photo['id']).dates['taken'])
-    return dt.strftime("%A the #{dt.day.ordinalize} of %B, %Y")
+    dt = DateTime.parse(current_photo.datetaken)
+    return dt.strftime("%A the #{dt.day.ordinalize} of %B, %Y by #{current_photo.ownername}")
   end
 
   def other_thumbnails
@@ -58,16 +58,19 @@ class FlickrSearch
 
 protected
   def matching_photos
-    @matching_photos ||= flickr.photos.search(search_conditions)
+    @zero = flickr.photos.search(search_conditions('99761031@N00'))
+    @one = flickr.photos.search(search_conditions('54002715@N06'))
+    @sorted = (@zero.to_a | @one.to_a).sort { |a,b| a.datetaken <=> b.datetaken }
+    return @sorted.reverse
   end
-  
-  def search_conditions
+
+  def search_conditions(user_id)
     {
-      :user_id => '99761031@N00',
-      :tags => 'hipstamatic',
+      :user_id => user_id,
+      :tags => 'photoaday',
       :sort => 'date-taken-desc',
       :per_page => 500,
-      :extra_info => 'date_taken,path_alias,url_sq,url_t,url_s,url_m,url_o'
+      :extras => 'date_taken,owner_name,path_alias,url_sq,url_t,url_s,url_m,url_o'
     }
   end
 end

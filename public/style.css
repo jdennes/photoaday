@@ -7,3 +7,4 @@ img { border: 0; }
 h1 { color: #ff1170; font-size: 4em; clear: right; text-align: right; margin: 0 0 14px 0; }
 h2 { font-size: 1.4em; clear: right; text-align: right; margin: 14px 0; padding-top: 14px; }
 p.description { clear: right; text-align: right; }
+p.phototitle { font-size: 2.4em; }
