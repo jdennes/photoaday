@@ -1,14 +1,13 @@
+%h1 one photo every day
+
 %a{ :href => @photo_link, :title => @photo.title }
   %img{ :class => 'main', :src => @photo_url, :alt => @photo.title }
 
-%p{ :class => 'description' }
-  = @description.gsub("\n", '<br />')
+%h2= "taken on #{@date_taken}"
 
-%h1
-  a photo a day
-%p
-  A photo a day from <a href="http://jdenn.es">me</a>.
-  
+%p{ :class => 'description' }
+  =@description.gsub("\n", '<br />')
+
 - @other_thumbnails.each do |title, image_href, photo_url|
   %a{ :href => photo_url, :title => title }
     %img{ :src => image_href, :alt => title }
