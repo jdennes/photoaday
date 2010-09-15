@@ -32,7 +32,7 @@ class FlickrSearch
   end
   
   def other_thumbnails
-    matching_photos.to_a.reverse.collect do |photo|
+    matching_photos.to_a.collect do |photo|
       [photo.title, FlickRaw.url_t(photo), "/photo/#{photo['id']}"]
     end
   end
@@ -56,26 +56,22 @@ end
 get '/' do
   search = FlickrSearch.new
   @photo = search.current_photo
-  etag(@photo['id'])
+  #etag(@photo['id'])
   @description = search.current_photo_description
   @photo_url = FlickRaw.url(@photo)
   @photo_link = FlickRaw.url_photopage(@photo)
-
   @other_thumbnails = search.other_thumbnails
   haml :index
 end
 
 get '/photo/:photo_id' do
   search = FlickrSearch.new(params[:photo_id])
-
   @photo = search.current_photo
-  etag(@photo['id'])
-
+  #etag(@photo['id'])
   @description = search.current_photo_description
   @photo_url = FlickRaw.url(@photo)
   @photo_link = FlickRaw.url_photopage(@photo)
-  
   @other_thumbnails = search.other_thumbnails
-  
+
   haml :index
 end
