@@ -4,10 +4,10 @@
 %p{ :class => 'phototitle' }
   = @photo.title
 
-%h2= "taken on #{@date_taken}"
-
 %p{ :class => 'description' }
   =@description.gsub("\n", '<br />')
+
+%h2= "taken on #{@date_taken}"
 
 - @other_thumbnails.each do |title, image_href, photo_url|
   %a{ :href => photo_url, :title => title }
