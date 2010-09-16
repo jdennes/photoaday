@@ -60,8 +60,8 @@ protected
   def matching_photos
     @zero = flickr.photos.search(search_conditions('99761031@N00'))
     @one = flickr.photos.search(search_conditions('54002715@N06'))
-    @sorted = (@zero.to_a | @one.to_a).sort { |a,b| a.datetaken <=> b.datetaken }
-    return @sorted.reverse
+    @sorted = (@zero.to_a | @one.to_a).sort { |a,b| b.datetaken <=> a.datetaken }
+    return @sorted
   end
 
   def search_conditions(user_id)
