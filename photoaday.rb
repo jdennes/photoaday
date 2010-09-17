@@ -58,9 +58,11 @@ class FlickrSearch
 
 protected
   def matching_photos
-    @zero = flickr.photos.search(search_conditions('99761031@N00'))
-    @one = flickr.photos.search(search_conditions('54002715@N06'))
-    @sorted = (@zero.to_a | @one.to_a).sort { |a,b| b.datetaken <=> a.datetaken }
+    if not @sorted
+      zero = flickr.photos.search(search_conditions('99761031@N00'))
+      one = flickr.photos.search(search_conditions('54002715@N06'))
+      @sorted = (zero.to_a | one.to_a).sort { |a,b| b.datetaken <=> a.datetaken }
+    end
     return @sorted
   end
 
