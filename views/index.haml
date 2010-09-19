@@ -1,15 +1,20 @@
-%a{ :href => @photo_link, :title => @photo.title, :target => '_blank' }
-  %img{ :class => 'main', :src => @photo_url, :alt => @photo.title }
-
-%p{ :class => 'phototitle' }
+- if not @photo
+  %h2
+    It would appear that we haven't started taking one photo every day just yet. Hopefully we will soon though! ^_^
+- else
   %a{ :href => @photo_link, :title => @photo.title, :target => '_blank' }
-    =@photo.title
+    %img{ :class => 'main', :src => @photo_url, :alt => @photo.title }
 
-%p{ :class => 'description' }
-  =@description.gsub("\n", '<br />')
+  %p{ :class => 'phototitle' }
+    %a{ :href => @photo_link, :title => @photo.title, :target => '_blank' }
+      =@photo.title
 
-%h2= "taken on #{@date_taken}"
+  %p{ :class => 'description' }
+    =@description.gsub("\n", '<br />')
 
-- @other_thumbnails.each do |title, image_href, photo_url|
-  %a{ :href => photo_url, :title => title }
-    %img{ :src => image_href, :alt => title }
+  %h2{ :class => 'pink-bottom-border' }
+    ="taken on #{@date_taken}"
+
+  - @other_thumbnails.each do |title, image_href, photo_url|
+    %a{ :href => photo_url, :title => title }
+      %img{ :src => image_href, :alt => title }

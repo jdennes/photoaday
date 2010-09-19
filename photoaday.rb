@@ -80,13 +80,13 @@ end
 get '/' do
   search = FlickrSearch.new
   @photo = search.current_photo
-  raise not_found unless @photo
-  
-  @description = search.current_photo_description
-  @date_taken = search.current_photo_date_taken
-  @photo_url = FlickRaw.url(@photo)
-  @photo_link = FlickRaw.url_photopage(@photo)
-  @other_thumbnails = search.other_thumbnails
+  if @photo  
+    @description = search.current_photo_description
+    @date_taken = search.current_photo_date_taken
+    @photo_url = FlickRaw.url(@photo)
+    @photo_link = FlickRaw.url_photopage(@photo)
+    @other_thumbnails = search.other_thumbnails
+  end
   haml :index
 end
 
