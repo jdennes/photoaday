@@ -4,7 +4,7 @@ a:hover, a:focus { text-decoration: none; background: #231F1F; color: #ffffff; }
 .container { text-align: left; width: 760px; margin: 0 auto; }
 img.main { float: right; margin-left: 0.5em; }
 img { border: 0; }
-h1 { color: #ff1170; font-size: 4em; clear: right; text-align: right; margin: 0 0 14px 0; }
+h1 { color: #ff1170; font-size: 4em; clear: right; text-align: right; margin: 0 0 14px 0; text-shadow: #bb004b 2px 2px 2px; }
 h1 a:hover, h1 a:focus { text-decoration: none; }
 h1 a:link, h1 a:hover, h1 a:focus, h1 a:visited { color: #ff1170; background: #111111; text-decoration: none; }
 h2 { font-size: 1.4em; clear: right; text-align: right; margin: 14px 0; padding-top: 14px; }

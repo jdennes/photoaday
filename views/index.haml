@@ -2,7 +2,8 @@
   %img{ :class => 'main', :src => @photo_url, :alt => @photo.title }
 
 %p{ :class => 'phototitle' }
-  = @photo.title
+  %a{ :href => @photo_link, :title => @photo.title, :target => '_blank' }
+    =@photo.title
 
 %p{ :class => 'description' }
   =@description.gsub("\n", '<br />')
