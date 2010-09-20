@@ -9,3 +9,11 @@
         %h1{ :class => 'pink-bottom-border' }
           one photo every day
       = yield
+      %div{ :id => 'footer' }
+        This little thing is constructed by 
+        %a{ :href => "http://www.flickr.com/photos/dassdevis", :target => "_blank" }
+          dass
+        and 
+        %a{ :href => "http://www.flickr.com/photos/jdennes", :target => "_blank" }
+          james
+        taking one photo each, every day.

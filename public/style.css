@@ -11,3 +11,4 @@ h2 { font-size: 1.4em; clear: right; text-align: right; margin: 14px 0; padding-
 .pink-bottom-border { padding-bottom: 6px; border-bottom: 1px dotted #ff1170; }
 p.phototitle { font-size: 2.4em; margin: 0 0 8px 0; }
 p.description { font-size: 1.2em; }
+div#footer { text-align: right; font-size: 0.9em; border-top: 1px dotted #ff1170; margin-top: 12px; padding: 8px 0 4px 0; }
