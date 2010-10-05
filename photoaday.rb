@@ -52,7 +52,7 @@ class FlickrSearch
 
   def other_thumbnails
     matching_photos.to_a.collect do |photo|
-      [photo.title, FlickRaw.url_t(photo), "/photo/#{photo['id']}"]
+      [photo.title, FlickRaw.url_s(photo), "/photo/#{photo['id']}"]
     end
   end
 
