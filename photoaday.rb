@@ -52,7 +52,10 @@ class FlickrSearch
 
   def other_thumbnails
     matching_photos.to_a.collect do |photo|
-      [photo.title, FlickRaw.url_s(photo), "/photo/#{photo['id']}"]
+      dt = DateTime.parse(photo['datetaken'])
+      by = photo['ownername'].split()[0]
+      taken = dt.strftime("%d %b, %Y by #{by}")
+      ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), "/photo/#{photo['id']}"]
     end
   end
 
