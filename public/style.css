@@ -1,4 +1,4 @@
-body { color: #5c5c5c; background: #111111; font-family: Helvetica, Arial, Sans-Serif; text-align: center; margin: 1em 0 0 0; vertical-align: middle; }
+body { color: #5c5c5c; background: #111111; font-family: Helvetica, Arial, Sans-Serif; text-align: center; margin: 0; vertical-align: middle; }
 a:link, a:visited { color: #3D3D3D  ; text-decoration: none; }
 a:hover, a:focus { text-decoration: none; background: #231F1F; color: #ffffff; }
 .container { text-align: left; width: 760px; margin: 0 auto; }
