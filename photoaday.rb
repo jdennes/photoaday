@@ -7,9 +7,8 @@ require 'date'
 FlickRawOptions = if File.exists?('flickraw.yaml')
   YAML.load_file('flickraw.yaml')
 else
-  { 'api_key' => ENV['api_key'] }
+  { 'api_key' => ENV['api_key'], 'shared_secret' => ENV['shared_secret'], 'auth_token' => ENV['auth_token'] }
 end
-
 require 'flickraw'
 
 # Rather than installing activesupport gem, extend Fixnum
