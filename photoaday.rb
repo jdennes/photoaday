@@ -27,7 +27,7 @@ class Fixnum
   end
 end
 
-class FlickrSearch
+class FlickrClient
   def initialize(photo_id = nil)
     @photo_id = photo_id
   end
@@ -58,50 +58,46 @@ class FlickrSearch
     end
   end
 
-protected
+  protected
+  
   def matching_photos
     if not @sorted
-      zero = flickr.photos.search(search_conditions('99761031@N00'))
-      one = flickr.photos.search(search_conditions('54002715@N06'))
-      @sorted = (zero.to_a | one.to_a).sort { |a,b| b.datetaken <=> a.datetaken }
+      james = flickr.photosets.getPhotos(search_conditions('72157625078364543'))
+      dass = flickr.photosets.getPhotos(search_conditions('72157625203331992'))
+      @sorted = (james['photo'].to_a | dass['photo'].to_a).sort { |a,b| b.datetaken <=> a.datetaken }
     end
     return @sorted
   end
 
-  def search_conditions(user_id)
-    {
-      :user_id => user_id,
-      :tags => 'photoaday',
-      :sort => 'date-taken-desc',
-      :per_page => 500,
-      :extras => 'date_taken,owner_name,path_alias,url_sq,url_t,url_s,url_m,url_o'
-    }
+  def search_conditions(photoset_id)
+    { :photoset_id => photoset_id, :sort => 'date-taken-desc',
+      :extras => 'date_taken,owner_name,path_alias,url_sq,url_t,url_s,url_m,url_o' }
   end
 end
 
 get '/' do
-  search = FlickrSearch.new
-  @photo = search.current_photo
+  fc = FlickrClient.new
+  @photo = fc.current_photo
   if @photo  
-    @description = search.current_photo_description
-    @date_taken = search.current_photo_date_taken
+    @description = fc.current_photo_description
+    @date_taken = fc.current_photo_date_taken
     @photo_url = FlickRaw.url(@photo)
     @photo_link = FlickRaw.url_photopage(@photo)
-    @other_thumbnails = search.other_thumbnails
+    @other_thumbnails = fc.other_thumbnails
   end
   haml :index
 end
 
 get '/photo/:photo_id' do
-  search = FlickrSearch.new(params[:photo_id])
-  @photo = search.current_photo
+  fc = FlickrClient.new(params[:photo_id])
+  @photo = fc.current_photo
   raise not_found unless @photo
 
-  @description = search.current_photo_description
-  @date_taken = search.current_photo_date_taken
+  @description = fc.current_photo_description
+  @date_taken = fc.current_photo_date_taken
   @photo_url = FlickRaw.url(@photo)
   @photo_link = FlickRaw.url_photopage(@photo)
-  @other_thumbnails = search.other_thumbnails
+  @other_thumbnails = fc.other_thumbnails
 
   haml :index
 end
