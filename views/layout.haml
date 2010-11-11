@@ -3,7 +3,7 @@
   %head
     %title one photo every day
     %link{ :rel => 'stylesheet', :type => 'text/css', :href => '/style.css' }
-  %body
+  %body{ :style => "background: url(\"#{@bg}\") repeat scroll 0 0 transparent" }
     .container
       %a{ :href => '/', :title => 'dass and james take one photo every single day' }
         %h1{ :class => 'pink-bottom-border' }

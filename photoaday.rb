@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'yaml'
 require 'haml'
 require 'sinatra'
@@ -10,6 +9,8 @@ else
   { 'api_key' => ENV['api_key'], 'shared_secret' => ENV['shared_secret'], 'auth_token' => ENV['auth_token'] }
 end
 require 'flickraw'
+
+BG_IMAGES = YAML.load_file('images.yaml') unless defined?(BG_IMAGES)
 
 # Rather than installing activesupport gem, extend Fixnum
 class Fixnum
@@ -75,7 +76,12 @@ class FlickrClient
   end
 end
 
+def get_bg
+  BG_IMAGES[rand(BG_IMAGES.size)]
+end
+
 get '/' do
+  @bg = get_bg
   fc = FlickrClient.new
   @photo = fc.current_photo
   if @photo  
@@ -89,6 +95,7 @@ get '/' do
 end
 
 get '/photo/:photo_id' do
+  @bg = get_bg
   fc = FlickrClient.new(params[:photo_id])
   @photo = fc.current_photo
   raise not_found unless @photo
