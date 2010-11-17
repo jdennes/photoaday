@@ -1,5 +1,6 @@
 require 'yaml'
 require 'haml'
+require 'builder'
 require 'sinatra'
 require 'date'
 
@@ -55,7 +56,7 @@ class FlickrClient
       dt = DateTime.parse(photo['datetaken'])
       by = photo['ownername'].split()[0]
       taken = dt.strftime("%d %b, %Y by #{by}")
-      ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), "/photo/#{photo['id']}"]
+      ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), FlickRaw.url_m(photo), "/photo/#{photo['id']}", dt]
     end
   end
 
@@ -107,6 +108,31 @@ get '/photo/:photo_id' do
   @other_thumbnails = fc.other_thumbnails
 
   haml :index
+end
+
+get '/feed' do
+  fc = FlickrClient.new
+  @other_thumbnails = fc.other_thumbnails
+  builder do |xml|
+    xml.instruct! :xml, :version => '1.0'
+    xml.rss :version => "2.0" do
+      xml.channel do
+        xml.title "one photo every day"
+        xml.description "This little thing is constructed by dass and james taking one photo each, every day."
+        xml.link "http://photoaday.jdenn.es/"
+        @other_thumbnails.each do |title, img_src_s, img_src_m, photo_url, taken|
+          xml.item do
+            url = "http://photoaday.jdenn.es#{photo_url}"
+            xml.title title
+            xml.link url
+            xml.description title
+            xml.pubDate Time.parse(taken.to_s).rfc822()
+            xml.guid url
+          end
+        end
+      end
+    end
+  end
 end
 
 not_found do
