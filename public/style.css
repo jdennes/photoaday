@@ -1,7 +1,7 @@
 body { color: #5c5c5c; background: #111111; font-family: Helvetica, Arial, Sans-Serif; text-align: center; margin: 0; vertical-align: middle; }
 a:link, a:visited { color: #3D3D3D  ; text-decoration: none; }
 a:hover, a:focus { text-decoration: none; background: #231F1F; color: #ffffff; }
-.container { background: #111111; text-align: left; width: 760px; margin: 0 auto; padding: 10px 20px 5px 20px; }
+.container { background: #111111; text-align: left; width: 760px; margin: 0 auto; padding: 0 20px 5px 20px; }
 img.main { float: right; margin-left: 0.5em; border: 2px #ff1170 solid; }
 img { border: 0; }
 a img.thumb { border: 2px #111111 solid; }
