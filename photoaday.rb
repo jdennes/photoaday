@@ -3,6 +3,7 @@ require 'haml'
 require 'builder'
 require 'sinatra'
 require 'date'
+require 'ostruct'
 
 FlickRawOptions = if File.exists?('flickraw.yaml')
   YAML.load_file('flickraw.yaml')
@@ -36,9 +37,13 @@ class FlickrClient
 
   def current_photo
     @current_photo ||= if @photo_id
-      matching_photos.to_a.find { |photo| photo['id'] == @photo_id }
+      matching_photos.to_a.find do |photo|
+        !photo.instance_of?(OpenStruct) ? photo['id'] == @photo_id : false
+      end
     else
-      matching_photos[0]
+      matching_photos.to_a.find do |photo|
+        !photo.instance_of?(OpenStruct)
+      end
     end
   end
 
@@ -53,20 +58,50 @@ class FlickrClient
 
   def other_thumbnails
     matching_photos.to_a.collect do |photo|
-      dt = DateTime.parse(photo['datetaken'])
-      by = photo['ownername'].split()[0]
-      taken = dt.strftime("%d %b, %Y by #{by}")
-      ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), FlickRaw.url_m(photo), "/photo/#{photo['id']}", dt]
+      if photo.instance_of?(OpenStruct)
+        [photo.title, photo.src, photo.href]
+      else
+        dt = DateTime.parse(photo['datetaken'])
+        by = photo['ownername'].split()[0]
+        taken = dt.strftime("%d %b, %Y by #{by}")
+        ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), "/photo/#{photo['id']}"]
+      end
     end
   end
 
   protected
-  
+
+  def insert_missing_days(sorted_photos)
+    # Find days on which a photo hasn't been taken and insert "forgotten" entries
+    first_day = DateTime.parse(sorted_photos.last.datetaken)
+    last_day = DateTime.now #parse(sorted_photos.first.datetaken)
+
+    hashed = {}
+    sorted_photos.each do |p|
+      hashed["#{p.datetaken.split()[0]}|#{p.ownername.split()[0]}"] = p
+    end
+
+    first_day.upto(last_day) do |d|
+      ["James", "Hadassah"].each do |n|
+        if !hashed["#{d.strftime("%Y-%m-%d")}|#{n}"]
+          f = OpenStruct.new({
+            :datetaken => d.strftime("%Y-%m-%d %H:%M:%S"),
+            :title => "Photo missing for #{d.strftime("%d %b, %Y")} by #{n}!",
+            :src => "/question.png",
+            :href => "/" })
+          sorted_photos << f
+        end
+      end
+    end
+    sorted_photos.sort { |a,b| b.datetaken <=> a.datetaken }
+  end
+
   def matching_photos
     if not @sorted
       james = flickr.photosets.getPhotos(search_conditions('72157625078364543'))
       dass = flickr.photosets.getPhotos(search_conditions('72157625203331992'))
       @sorted = (james['photo'].to_a | dass['photo'].to_a).sort { |a,b| b.datetaken <=> a.datetaken }
+      @sorted = insert_missing_days(@sorted)
     end
     return @sorted
   end
