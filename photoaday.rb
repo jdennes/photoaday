@@ -31,8 +31,9 @@ class Fixnum
 end
 
 class FlickrClient
-  def initialize(photo_id = nil)
+  def initialize(photo_id = nil, show_missing = false)
     @photo_id = photo_id
+    @show_missing = show_missing
   end
 
   def current_photo
@@ -101,7 +102,9 @@ class FlickrClient
       james = flickr.photosets.getPhotos(search_conditions('72157625078364543'))
       dass = flickr.photosets.getPhotos(search_conditions('72157625203331992'))
       @sorted = (james['photo'].to_a | dass['photo'].to_a).sort { |a,b| b.datetaken <=> a.datetaken }
-      @sorted = insert_missing_days(@sorted)
+      if @show_missing
+        @sorted = insert_missing_days(@sorted)
+      end
     end
     return @sorted
   end
@@ -117,9 +120,13 @@ def get_bg
   "http://farm3.static.flickr.com/2708/4503161659_0c6772d5f6_o.jpg"
 end
 
+def show_missing(params)
+  return (params.has_key?("showmissing") and params["showmissing"] == "true")
+end
+
 get '/' do
   @bg = get_bg
-  fc = FlickrClient.new
+  fc = FlickrClient.new(nil, show_missing(params))
   @photo = fc.current_photo
   if @photo  
     @description = fc.current_photo_description
@@ -133,7 +140,7 @@ end
 
 get '/photo/:photo_id' do
   @bg = get_bg
-  fc = FlickrClient.new(params[:photo_id])
+  fc = FlickrClient.new(params[:photo_id], show_missing(params))
   @photo = fc.current_photo
   raise not_found unless @photo
 
