@@ -12,7 +12,7 @@ else
 end
 require 'flickraw'
 
-BG_IMAGES = YAML.load_file('images.yaml') unless defined?(BG_IMAGES)
+# BG_IMAGES = YAML.load_file('images.yaml') unless defined?(BG_IMAGES)
 
 # Rather than installing activesupport gem, extend Fixnum
 class Fixnum
@@ -113,7 +113,8 @@ class FlickrClient
 end
 
 def get_bg
-  BG_IMAGES[rand(BG_IMAGES.size)]
+  # BG_IMAGES[rand(BG_IMAGES.size)]
+  "http://farm3.static.flickr.com/2708/4503161659_0c6772d5f6_o.jpg"
 end
 
 get '/' do
