@@ -65,7 +65,7 @@ class FlickrClient
         dt = DateTime.parse(photo['datetaken'])
         by = photo['ownername'].split()[0]
         taken = dt.strftime("%d %b, %Y by #{by}")
-        ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), "/photo/#{photo['id']}"]
+        ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), "/photo/#{photo['id']}", dt]
       end
     end
   end
@@ -161,9 +161,9 @@ get '/feed' do
     xml.rss :version => "2.0" do
       xml.channel do
         xml.title "one photo every day"
-        xml.description "This little thing is constructed by dass and james taking one photo each, every day."
+        xml.description "This little thing is constructed by dass and james taking one photo every day."
         xml.link "http://photoaday.jdenn.es/"
-        @other_thumbnails.each do |title, img_src_s, img_src_m, photo_url, taken|
+        @other_thumbnails.each do |title, img_src_s, photo_url, taken|
           xml.item do
             url = "http://photoaday.jdenn.es#{photo_url}"
             xml.title title
