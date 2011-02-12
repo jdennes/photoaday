@@ -5,15 +5,12 @@
     %link{ :rel => 'stylesheet', :type => 'text/css', :href => '/style.css?v=20110205' }
   %body{ :style => "background: url(\"#{@bg}\") repeat scroll 0 0 transparent" }
     .container
-      %a{ :href => '/', :title => 'dass and james take one photo every single day' }
+      %a{ :href => '/', :title => 'a thing where james takes one photo every single day' }
         %h1{ :class => 'pink-bottom-border' }
           one photo every day
       = yield
       %div{ :id => 'footer' }
         This little thing is constructed by 
-        %a{ :href => "http://www.flickr.com/photos/dassdevis", :target => "_blank" }
-          dass
-        and 
         %a{ :href => "http://www.flickr.com/photos/jdennes", :target => "_blank" }
           james
         taking one photo every day. You can 

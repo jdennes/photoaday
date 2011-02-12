@@ -73,25 +73,23 @@ class FlickrClient
   protected
 
   def insert_missing_days(sorted_photos)
-    # Find days on which a photo hasn't been taken and insert "forgotten" entries
+    # Find days for which a photo isn't found and insert "missing" entries
     first_day = DateTime.parse(sorted_photos.last.datetaken)
-    last_day = DateTime.now #parse(sorted_photos.first.datetaken)
+    last_day = DateTime.now
 
     hashed = {}
     sorted_photos.each do |p|
-      hashed["#{p.datetaken.split()[0]}|#{p.ownername.split()[0]}"] = p
+      hashed["#{p.datetaken.split()[0]}"] = p
     end
 
     first_day.upto(last_day) do |d|
-      ["James", "Hadassah"].each do |n|
-        if !hashed["#{d.strftime("%Y-%m-%d")}|#{n}"]
-          f = OpenStruct.new({
-            :datetaken => d.strftime("%Y-%m-%d %H:%M:%S"),
-            :title => "Photo missing for #{d.strftime("%d %b, %Y")} by #{n}!",
-            :src => "/question.png",
-            :href => "/" })
-          sorted_photos << f
-        end
+      if !hashed["#{d.strftime("%Y-%m-%d")}"]
+        f = OpenStruct.new({
+          :datetaken => d.strftime("%Y-%m-%d %H:%M:%S"),
+          :title => "Photo missing for #{d.strftime("%d %b, %Y")}!",
+          :src => "/question.png",
+          :href => "/" })
+        sorted_photos << f
       end
     end
     sorted_photos.sort { |a,b| b.datetaken <=> a.datetaken }
@@ -100,8 +98,7 @@ class FlickrClient
   def matching_photos
     if not @sorted
       james = flickr.photosets.getPhotos(search_conditions('72157625078364543'))
-      dass = flickr.photosets.getPhotos(search_conditions('72157625203331992'))
-      @sorted = (james['photo'].to_a | dass['photo'].to_a).sort { |a,b| b.datetaken <=> a.datetaken }
+      @sorted = (james['photo'].to_a).sort { |a,b| b.datetaken <=> a.datetaken }
       if @show_missing
         @sorted = insert_missing_days(@sorted)
       end
@@ -161,7 +158,7 @@ get '/feed' do
     xml.rss :version => "2.0" do
       xml.channel do
         xml.title "one photo every day"
-        xml.description "This little thing is constructed by dass and james taking one photo every day."
+        xml.description "This little thing is constructed by james taking one photo every day."
         xml.link "http://photoaday.jdenn.es/"
         @other_thumbnails.each do |title, img_src_s, photo_url, taken|
           xml.item do
