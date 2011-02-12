@@ -7,18 +7,19 @@
     .container
       %a{ :href => '/', :title => 'a thing where james takes one photo every single day' }
         %h1{ :class => 'pink-bottom-border' }
-          one photo every day
+          ="one photo every day"
       = yield
       %div{ :id => 'footer' }
-        This little thing is constructed by 
+        ="This little thing is constructed by"
         %a{ :href => "http://www.flickr.com/photos/jdennes", :target => "_blank" }
-          james
-        taking one photo every day. You can 
+          ="james"
+        ="taking one photo every day. You can "
         %a{ :href => "/feed" }
           feed
-        or see
+        ="or see"
         %a{ :href => "/?showmissing=true"}
           missing photos
+        ="..."
 
     <script type="text/javascript">
     var _gaq = _gaq || [];
