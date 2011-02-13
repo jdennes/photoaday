@@ -1,6 +1,5 @@
 require 'yaml'
 require 'haml'
-require 'builder'
 require 'sinatra'
 require 'date'
 require 'ostruct'
@@ -65,7 +64,7 @@ class FlickrClient
         dt = DateTime.parse(photo['datetaken'])
         by = photo['ownername'].split()[0]
         taken = dt.strftime("%d %b, %Y by #{by}")
-        ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), "/photo/#{photo['id']}", dt]
+        ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), FlickRaw.url_m(photo), "/photo/#{photo['id']}", dt]
       end
     end
   end
@@ -125,7 +124,7 @@ get '/' do
   @bg = get_bg
   fc = FlickrClient.new(nil, show_missing(params))
   @photo = fc.current_photo
-  if @photo  
+  if @photo
     @description = fc.current_photo_description
     @date_taken = fc.current_photo_date_taken
     @photo_url = FlickRaw.url(@photo)
@@ -135,7 +134,7 @@ get '/' do
   haml :index
 end
 
-get '/photo/:photo_id' do
+get '/photo/:photo_id/?' do
   @bg = get_bg
   fc = FlickrClient.new(params[:photo_id], show_missing(params))
   @photo = fc.current_photo
@@ -150,29 +149,11 @@ get '/photo/:photo_id' do
   haml :index
 end
 
-get '/feed' do
+get '/feed/?' do
+  content_type 'application/atom+xml', :charset => 'utf-8'
   fc = FlickrClient.new
-  @other_thumbnails = fc.other_thumbnails
-  builder do |xml|
-    xml.instruct! :xml, :version => '1.0'
-    xml.rss :version => "2.0" do
-      xml.channel do
-        xml.title "one photo every day"
-        xml.description "This little thing is constructed by james taking one photo every day."
-        xml.link "http://photoaday.jdenn.es/"
-        @other_thumbnails.each do |title, img_src_s, photo_url, taken|
-          xml.item do
-            url = "http://photoaday.jdenn.es#{photo_url}"
-            xml.title title
-            xml.link url
-            xml.description title
-            xml.pubDate Time.parse(taken.to_s).rfc822()
-            xml.guid url
-          end
-        end
-      end
-    end
-  end
+  @photos = fc.other_thumbnails
+  haml :feed, {:format => :xhtml, :layout => false, :cache => false}
 end
 
 not_found do

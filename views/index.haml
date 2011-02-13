@@ -15,6 +15,6 @@
   %h2{ :class => 'pink-bottom-border' }
     ="taken on #{@date_taken}"
 
-  - @other_thumbnails.each do |title, img_src_s, photo_url|
+  - @other_thumbnails.each do |title, img_src_s, img_src, photo_url, taken|
     %a{ :href => photo_url, :title => title }
       %img{ :src => img_src_s, :alt => title, :width => '75', :height => '75', :class => 'thumb' }
