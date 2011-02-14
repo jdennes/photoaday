@@ -9,7 +9,7 @@
     %name James Dennes
   - @photos.each do |title, img_src_s, img_src, photo_url, taken|
     %entry
-      %title= title
+      %title&= title
       %link{:href => "http://photoaday.jdenn.es#{photo_url}"}
       %id= "http://photoaday.jdenn.es#{photo_url}"
       %published= taken
