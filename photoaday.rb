@@ -11,8 +11,6 @@ else
 end
 require 'flickraw'
 
-# BG_IMAGES = YAML.load_file('images.yaml') unless defined?(BG_IMAGES)
-
 # Rather than installing activesupport gem, extend Fixnum
 class Fixnum
   def ordinalize
@@ -56,15 +54,15 @@ class FlickrClient
     return dt.strftime("%A the #{dt.day.ordinalize} of %B, %Y by #{current_photo.ownername}")
   end
 
-  def other_thumbnails
+  def all_photos
     matching_photos.to_a.collect do |photo|
       if photo.instance_of?(OpenStruct)
         [photo.title, photo.src, photo.href]
       else
         dt = DateTime.parse(photo['datetaken'])
         by = photo['ownername'].split()[0]
-        taken = dt.strftime("%d %b, %Y by #{by}")
-        ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), FlickRaw.url_m(photo), "/photo/#{photo['id']}", dt]
+        taken = dt.strftime("%a %d %b, %Y by #{by}")
+        ["#{photo.title} - #{taken}", FlickRaw.url_s(photo), FlickRaw.url(photo), "/photo/#{photo['id']}", dt]
       end
     end
   end
@@ -112,7 +110,6 @@ class FlickrClient
 end
 
 def get_bg
-  # BG_IMAGES[rand(BG_IMAGES.size)]
   "http://farm3.static.flickr.com/2708/4503161659_0c6772d5f6_o.jpg"
 end
 
@@ -129,7 +126,7 @@ get '/' do
     @date_taken = fc.current_photo_date_taken
     @photo_url = FlickRaw.url(@photo)
     @photo_link = FlickRaw.url_photopage(@photo)
-    @other_thumbnails = fc.other_thumbnails
+    @thumbs = fc.all_photos
   end
   haml :index
 end
@@ -144,7 +141,7 @@ get '/photo/:photo_id/?' do
   @date_taken = fc.current_photo_date_taken
   @photo_url = FlickRaw.url(@photo)
   @photo_link = FlickRaw.url_photopage(@photo)
-  @other_thumbnails = fc.other_thumbnails
+  @thumbs = fc.all_photos
 
   haml :index
 end
@@ -152,7 +149,7 @@ end
 get '/feed/?' do
   content_type 'application/atom+xml', :charset => 'utf-8'
   fc = FlickrClient.new
-  @photos = fc.other_thumbnails
+  @photos = fc.all_photos
   haml :feed, {:format => :xhtml, :layout => false, :cache => false}
 end
 
