@@ -117,6 +117,12 @@ def show_missing(params)
   return (params.has_key?("showmissing") and params["showmissing"] == "true")
 end
 
+helpers do
+  def partial(name, locals={})
+    haml "_#{name}".to_sym, :layout => false, :locals => locals
+  end
+end
+
 get '/' do
   @bg = get_bg
   fc = FlickrClient.new(nil, show_missing(params))
