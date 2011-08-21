@@ -109,10 +109,6 @@ class FlickrClient
   end
 end
 
-def get_bg
-  "http://farm3.static.flickr.com/2708/4503161659_0c6772d5f6_o.jpg"
-end
-
 def show_missing(params)
   return (params.has_key?("showmissing") and params["showmissing"] == "true")
 end
@@ -124,7 +120,6 @@ helpers do
 end
 
 get '/' do
-  @bg = get_bg
   fc = FlickrClient.new(nil, show_missing(params))
   @photo = fc.current_photo
   if @photo
@@ -133,12 +128,12 @@ get '/' do
     @photo_url = FlickRaw.url(@photo)
     @photo_link = FlickRaw.url_photopage(@photo)
     @thumbs = fc.all_photos
+    @photo_count = @thumbs.length
   end
   haml :index
 end
 
 get '/photo/:photo_id/?' do
-  @bg = get_bg
   fc = FlickrClient.new(params[:photo_id], show_missing(params))
   @photo = fc.current_photo
   raise not_found unless @photo
@@ -148,7 +143,7 @@ get '/photo/:photo_id/?' do
   @photo_url = FlickRaw.url(@photo)
   @photo_link = FlickRaw.url_photopage(@photo)
   @thumbs = fc.all_photos
-
+  @photo_count = @thumbs.length
   haml :index
 end
 

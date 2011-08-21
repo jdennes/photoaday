@@ -2,18 +2,19 @@
   %h2
     It would appear that I haven't started taking one photo every day just yet. Hopefully I will soon though! ^_^
 - else
+  %p{ :id => 'photo-title', :class => 'large-serif' }
+    =@photo.title
+  %p
+    =@description.gsub("\n", '<br />')
+
   %a{ :href => @photo_link, :title => @photo.title, :target => '_blank' }
     %img{ :class => 'main', :src => @photo_url, :alt => @photo.title }
 
-  %p{ :class => 'phototitle' }
-    %a{ :href => @photo_link, :title => @photo.title, :target => '_blank' }
-      =@photo.title
+  %p{ :class => 'pink-bottom-border' }
+    ="Taken on #{@date_taken}"
 
-  %p{ :class => 'description' }
-    =@description.gsub("\n", '<br />')
-
-  %h2{ :class => 'pink-bottom-border' }
-    ="taken on #{@date_taken}"
+  %div{ :id => 'the-rest', :class => 'large-serif' }
+    ="The rest of the photos (most recent first):"
 
   - @thumbs.each do |title, img_src_s, img_src, photo_url, taken|
     %a{ :href => photo_url, :title => title }
