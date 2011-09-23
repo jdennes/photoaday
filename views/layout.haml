@@ -10,7 +10,9 @@
     .container
       %div{ :id => 'about', :class => 'pink-bottom-border' }
         ="On the 25th of September 2010, <a href=\"http://jdenn.es/\" target=\"_blank\">James</a> decided to start taking "
-        ="<a href=\"/\">one photo every day</a>. So far, he's taken "
-        %a{ :href => "http://www.flickr.com/photos/jdennes/sets/72157625078364543/", :target => "_blank" }=@photo_count
-        ="photos."
+        ="<a href=\"/\">one photo every day</a>."
+        - if @photo_count
+          ="So far, he's taken "
+          %a{ :href => "http://www.flickr.com/photos/jdennes/sets/72157625078364543/", :target => "_blank" }=@photo_count
+          ="photos."
       = yield
