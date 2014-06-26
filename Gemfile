@@ -1,4 +1,5 @@
-source :rubygems
-gem 'sinatra', '>= 1.0'
-gem 'flickraw', '~> 0.8.1'
-gem 'haml'
+source "https://rubygems.org"
+
+gem "sinatra", "~> 1.4"
+gem "flickraw", "~> 0.8"
+gem "haml"
