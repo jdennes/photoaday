@@ -4,8 +4,7 @@
     %title="one photo every day"
     %link{:rel => 'shortcut icon', :href => '/favicon.ico'}
     %link{ :rel => 'stylesheet', :type => 'text/css', :href => '/style.css?v=20110821' }
-    -if production?
-      = partial :google_analytics
+    = partial :google_analytics
   %body
     .container
       %div{ :id => 'about', :class => 'pink-bottom-border' }

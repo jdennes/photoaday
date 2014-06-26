@@ -1,14 +1,13 @@
-require 'yaml'
 require 'haml'
 require 'sinatra'
 require 'date'
 require 'ostruct'
 
-FlickRawOptions = if File.exists?('flickraw.yaml')
-  YAML.load_file('flickraw.yaml')
-else
-  { 'api_key' => ENV['api_key'], 'shared_secret' => ENV['shared_secret'], 'auth_token' => ENV['auth_token'] }
-end
+FlickRawOptions = {
+  "api_key" => ENV['API_KEY'],
+  "shared_secret" => ENV['SHARED_SECRET'],
+  "auth_token" => ENV['AUTH_TOKEN']
+}
 require 'flickraw'
 
 # Rather than installing activesupport gem, extend Fixnum
